@@ -24,15 +24,15 @@ evidence (Figure TS.16c) (high confidence). {7.5.5}""
 '''
 
 
-datadir=Path('../data')
+datadir=Path('data')
 inputdir=datadir / 'input'
 outputdir=datadir / 'output'
-figdir=Path('../figures')
+figdir=Path('figures')
 
 
 
 #open CMIP6 data
-df_cmip6=pd.read_csv(inputdir / 'CMIP6/cmip6_data.csv', index_col=0)
+df_cmip6=pd.read_csv(inputdir / 'CMIP6/cmip6_raw_trends.csv', index_col=0)
 
 def add_str(string_to_add, list_of_strings_in):
     '''
@@ -78,11 +78,10 @@ df_cmip6.dropna(subset=['TCR'], inplace=True)
 
 
 #Formulate TCR distribution based on the IPCC report
-#Make normal distribution for TCRE (K/Mt CO2)
 NINETY_TO_ONESIGMA = norm.ppf(0.95)
 tcr_norm=norm(loc=1.8, scale=0.6 / NINETY_TO_ONESIGMA)
 
-
+# Calculate weights based on TCR
 df_cmip6['weight']=tcr_norm.pdf(df_cmip6['TCR'])
 df_cmip6['weight']=df_cmip6['weight']/df_cmip6['weight'].sum()
 
@@ -112,9 +111,6 @@ df_all_ssps=calculate_means(df_cmip6, ssps3)
 # Calculate means for SSP1-2.6 and SSP5-8.5
 df_all_models=calculate_means(df_cmip6, ssps2)
 
-
-        
-    
 
 def calculate_kdes(df):
     columns=df.columns[0:-1] #Select all except weights
@@ -165,10 +161,7 @@ def visualize(df, intervals, intervals_posterior, title='', figname=None, cut_wa
     #Select columns excluding TCR and weight
     xticklabels=df.columns[0:-2].sort_values()
     
-    
-    
-    
-    
+
     for i,column in enumerate(xticklabels):
         
         if i==len(xticklabels)-1:
@@ -188,11 +181,6 @@ def visualize(df, intervals, intervals_posterior, title='', figname=None, cut_wa
         sc=ax.scatter(i*np.ones(len(df.loc[models, column])),
                       df.loc[models, column],c=df.loc[models,'weight'],
                       cmap='GnBu',edgecolors='black', label=label_scatter)
-        
-        
-        
-        
-        
         
         
         
@@ -249,11 +237,7 @@ def plot_pdfs(df,ssps,kde_prior, kde_posterior, figname):
             
             # Plot unposterior histogram and kde
             df[scen][0:-2].hist(bins=8, density=True, ax=ax[i,j], alpha=0.5, color='blue',label='Prior histogram')
-            
-            
             ax[i,j].set_title(scen)
-            
-            
             j+=1
             
             
@@ -294,7 +278,6 @@ def plot_scatter_TCR_warming_rate(df, title, figname, cut_warming_rate=False):
 plot_scatter_TCR_warming_rate(df_all_models, 'SSPs  1-2.6 and 5-8.5 with 27 models', figdir / 'scatter_TCR_warmig_rate_all_models.png')
 plot_scatter_TCR_warming_rate(df_all_models, 'SSPs  1-2.6 and 5-8.5 with 27 models', figdir / 'scatter_TCR_warmig_rate_all_models_cut_warming_rate.png', cut_warming_rate=True)
 plot_scatter_TCR_warming_rate(df_all_ssps, 'SSPs 1-1.9, 1-2.6 and 5-8.5 with 8 models', figdir / 'scatter_TCR_warmig_rate_all_ssps.png')
-
 
 
 
