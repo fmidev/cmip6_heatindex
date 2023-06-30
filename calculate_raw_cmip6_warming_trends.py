@@ -9,7 +9,7 @@ Original file is located at
 This code was developed on run on https://colab.research.google.com/. Running it locally can be challenging due to memory issues. Written by Kalle Nordling.
 """
 
-! pip install xarray==0.16 zarr gcsfs cftime nc-time-axis intake-esm
+
 
 import xarray as xr
 import numpy as np
