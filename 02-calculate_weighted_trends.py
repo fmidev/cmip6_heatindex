@@ -32,7 +32,7 @@ figdir=Path('figures')
 
 
 #open CMIP6 data
-df_cmip6=pd.read_csv(inputdir / 'CMIP6/cmip6_raw_trends.csv', index_col=0)
+df_cmip6=pd.read_csv(inputdir / 'cmip6_raw_trends.csv', index_col=0)
 
 def add_str(string_to_add, list_of_strings_in):
     '''
@@ -61,8 +61,9 @@ ssps3=['ssp119','ssp126', 'ssp585']
 ssps2=['ssp126', 'ssp585']
 obs_warming_trend=0.486 # K / decade
 obs_heat_trend=0.56 # K / decade
+
+# Calculate scaled trends for SSPs
 df_cmip6[add_str('-scaled',ssps3)]=df_cmip6[ssps3].div(df_cmip6['historical'], axis=0)*obs_warming_trend
-# df_cmip6=df_cmip6.drop(columns=['historical'])
 
 
 # Calculated heat index trends
@@ -70,8 +71,8 @@ df_cmip6[add_str('-heat_index_scaled',ssps3)]=df_cmip6[ssps3].div(df_cmip6['hist
 
 
 #Open TCR data
-data_hausfather=pd.read_excel(inputdir / 'hausfather_2022_data.xlsx', index_col=0, sheet_name='ECSTCR', skiprows=2, nrows=59)
-df_cmip6['TCR']=data_hausfather['TCR'].loc[df_cmip6.index]
+data_tcr=pd.read_excel(inputdir / 'TCR.xlsx', index_col=0, sheet_name='TCR', skiprows=0)
+df_cmip6['TCR']=data_tcr['TCR'].loc[df_cmip6.index]
 
 #Remove models without TCR value
 df_cmip6.dropna(subset=['TCR'], inplace=True)
@@ -288,8 +289,3 @@ with pd.ExcelWriter(outputdir/'processsed_cmip6_data.xlsx') as writer:
     # to store the dataframe in specified sheet
     df_all_ssps.to_excel(writer, sheet_name="All SSPs")
     df_all_models.to_excel(writer, sheet_name="All models")
-    
-
-
-
-

@@ -265,8 +265,8 @@ hist_trend=0.486
 ax.plot([-1,2],[hist_trend,hist_trend],linewidth=3,label='OBS')
 ax.set_xlim(0.3,1.5)
 ax.legend(fontsize=20)
-plt.savefig('figure.eps',dpi=1800)
-plt.savefig('figure.png')
+plt.savefig('figures/figure.eps',dpi=1800)
+plt.savefig('figures/figure.png')
 #ax.set_title('Future warming trends',fontsize=20)
 
 cmip6_mean_hist
@@ -288,4 +288,4 @@ for model in models:
 
 df=pd.DataFrame(data=output,index=models)
 print(df)
-df.to_csv('cmip6_raw_trends.csv')
+df.to_csv('data/cmip6_raw_trends.csv')
