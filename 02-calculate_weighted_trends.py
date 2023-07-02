@@ -32,7 +32,7 @@ figdir=Path('figures')
 
 
 #open CMIP6 data
-df_cmip6=pd.read_csv(inputdir / 'cmip6_raw_trends.csv', index_col=0)
+df_cmip6=pd.read_csv(outputdir / 'cmip6_raw_trends.csv', index_col=0)
 
 def add_str(string_to_add, list_of_strings_in):
     '''

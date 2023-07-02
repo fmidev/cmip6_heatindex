@@ -7,6 +7,6 @@
 *jupyter.*out*
 .ipynb
 *DS_Store
-data/*
+data/output/*
 figures/*
 
